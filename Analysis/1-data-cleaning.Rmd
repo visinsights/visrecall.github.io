@@ -1,0 +1,128 @@
+---
+title: "Cleaning the data for the study Tell don't just show: Narratives improve recall more than interactivity for communicative visualizations"
+author: "Anonymous"
+output: html_document
+---
+
+```{r setup, results="hide", message=FALSE, warning=FALSE}
+library(knitr)
+opts_chunk$set(cache=FALSE, autodep=TRUE, cache.comments=FALSE,
+               message=FALSE, warning=FALSE)
+library(tidyverse)
+library(modelr)
+library(magrittr)
+```
+
+## Loading and Cleaning the Data from Qualtrics
+
+We collected two types of data - responses to the survey which participants saw after completing the survey and their interaction logs which recorded the amount of time spent on the visualization and for the interactive visualizations (interactive condition; narrative + interactive condition), also recorded mouse clicks to change the data in the visualization, and mouse hovers to get more granular data.
+
+The raw data from the responses and the interactions are collected in `df_responses` and `df_interaction_logs`. The correct answers to the survey questions are in `answer_key`. We combine the dataframes on individuals (unique responseID), and convert the data into long format, the dataframe `df_long`, which will be used in the subsequent analysis.
+
+```{r load}
+# This file contains the responses of the participants to the questionnaire which was used to measure recall 
+df = read.csv('data/survey_responses/vis_interpretation_responses.csv', header=TRUE)
+
+cols <- c(9, 18:65)
+q_cols <- c(2:45)
+
+df %<>% 
+  .[3:nrow(.), cols] %>%
+  mutate(
+    ResponseId = fct_relevel(ResponseId),
+    condition = factor(condition),
+    vis = factor(vis)
+  ) %>%
+  gather(question, response, q_cols, factor_key = TRUE) %>%
+  filter(response != '') %>%
+  separate(question, into = c("delete","question"), sep = "_") %>%
+  select(-c(userID, delete)) %>%
+  mutate(
+    response = as.numeric(as.logical(response)),
+    question = fct_relevel(question),
+    question = as.factor(paste("Q", question, sep = '')),
+    narrative = ifelse(condition == 'story' | condition == 'all', 'True', 'False'),
+    interactivity = ifelse(condition == 'int' | condition == 'all', 'True', 'False')
+  )
+
+head(df)
+```
+
+
+## Converting and storing data
+
+We run the analysis twice: 
+(1) Excluding the participants which failed the attention check question (pre-registered version); 
+(2) Including the participants which failed the attention check question. 
+
+We do this because we found that the attention check question (for the carbon clock visualization) excluded a large number of participants (~ 30) compared to the other conditions (~ 5-10)
+
+First, we filter out the participants which answered TRUE to all the questions or FALSE to all the questions. We don't include these participants in either of our analysis.
+
+```{r}
+df %<>%
+  mutate( response = as.numeric(response) ) %>%
+  group_by(ResponseId) %>%
+  spread(question, response) %>%
+  ungroup() %>%
+  mutate( sum_responses = rowSums(.[7:17]) ) %>%
+  filter( sum_responses != 11 & sum_responses != 0 ) %>%
+  select(-sum_responses)
+
+write.csv(df, 'data/clean_survey_responses/formatted_vis_interpretation_responses.csv', row.names = FALSE)
+```
+
+
+## Engagement Logs
+We collected logs of total time spent on the visualization and the number of interactions that users performed with the interactive visualizations. The data was collected using JavaScript event listeners and stored in an RDS (Database) on AWS. We merge the ```log data``` with the ```survey responses```. We found some users data were logged twice. We drop these from the analyses. We report the results using the logs from 371 users.
+
+We first read the ```log data``` from the file. We then join with the ```survey responses``` and the calculate the number of correctly answered questions for each participant. We then store the resulting data frame to be used in our analysis.
+
+```{r}
+# This file contains the logs for the interactions that a user performed on the visualization webpage which consists of two primary variables: total uptime, and number of click interactions
+df_interaction_log = read.csv('data/interaction_logs/interaction_logs.csv', header = TRUE)
+```
+
+```{r}
+df %<>% mutate(un = factor(un))
+
+df_interaction_log %<>% 
+  mutate(un = factor(un)) %>%
+  distinct(un, .keep_all = TRUE)
+
+engagement_measures <- df %>% 
+  left_join(df_interaction_log, by = c('un', 'condition', 'vis')) %>% 
+  mutate(
+    ResponseId = factor(ResponseId),
+    totalTime = as.numeric(totalTime)
+    ) %>%
+  filter(!is.na(totalTime))
+```
+
+```{r}
+answer_key = read.csv('data/answers.csv', header=TRUE)
+  
+engagement_measures %<>% 
+  gather(., question, response, 
+                 c('Q1', 'Q2', 'Q3', 'Q4', 'Q5', 'Q6', 'Q7', 'Q8', 'Q9', 'Q10', 'Q11'), 
+                 factor_key=TRUE) %>%
+  mutate( response  = as.logical(response)) %>%
+  .[order(.$ResponseId, .$question),] %>%
+  inner_join(x = ., y = answer_key, by = c("question", "vis")) %>%
+  mutate(
+    question = factor(question),
+    correct = as.numeric((answer == response))
+  ) %>%
+  group_by(ResponseId, narrative, interactivity, vis) %>% 
+  summarise(
+    uptime = mean(totalTime),
+    interactions = as.integer(mean(clickCount)),
+    correct = mean(correct)
+  )
+
+head(engagement_measures)
+```
+
+```{r}
+write.csv(engagement_measures, 'data/formatted_vis_engagement_logs.csv', row.names = FALSE)
+```

@@ -1,0 +1,169 @@
+h1{
+  font-family: 'Gentium Book Basic', 'serif';
+  font-weight: 700;
+  font-size: 36px;
+}
+
+p {
+  font-family: 'Avenir Next', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 20px;
+  margin: 0px;
+}
+
+p.body{
+  font-family: 'Avenir Next', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 16px;
+}
+
+.inline-text {
+  display: inline-block;
+}
+
+.margin-top-sm {
+  margin-top: 24px;
+}
+
+.margin-top-md {
+  margin-top: 48px;
+}
+
+.margin-btm-md {
+  margin-bottom: 48px;
+}
+
+.margin-lg {
+  margin: 80px 0px;
+}
+
+text {
+  font-family: 'Avenir Next', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.bar{
+  height: 6px;
+  width: 80px;
+  margin: 8px 0px;
+  display: inline-block;
+}
+
+.vaccinated{
+  background-color: #94b1ca;
+}
+
+.susceptible{
+  background-color: #ffce4b;
+}
+
+.infected{
+  background-color: #b51800;
+}
+
+div.status-container{
+  margin-top: 24px; 
+}
+
+.infect-status{
+  font-size: 20px;
+  font-weight: 400;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.icon-container{
+  display: inline-block;
+  vertical-align: top;
+  margin-top: 40px;
+}
+
+.stepper-button{
+  display: inline-block;
+  height: 36px;
+  padding: 0px 16px;
+  background-color: #b51800;
+  border-radius: 4px;
+  font-family: 'Avenir Next', sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 32px;
+  color: #fff;
+  text-align: center;
+  vertical-align: top;
+  margin-top: 24px;
+  margin-right: 24px;
+}
+
+.slidecontainer {
+    width: 200px; /* Width of the outside container */
+    margin-top: 16px;
+}
+
+/* The slider itself */
+.slider {
+    -webkit-appearance: none;  /* Override default CSS styles */
+    appearance: none;
+    width: 100%; /* Full-width */
+    height: 2px; /* Specified height */
+    background: #d3d3d3; /* Grey background */
+    outline: none; /* Remove outline */
+    opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
+    -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+    transition: opacity .2s;
+}
+
+/* Mouse-over effects */
+.slider:hover {
+    opacity: 1; /* Fully shown on mouse-over */
+}
+
+.inactive {
+  background-color: #CF5E4C;
+  cursor: default;
+}
+
+
+
+.footer {
+  background-color: #fafafa;
+  margin-top: 80px;
+  padding: 48px 0px;
+}
+
+.survey-button {
+  width: 160px;
+  height: 32px;
+  line-height: 32px;
+  font-family: 'Avenir Next', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  background-color: #2a2a2a;
+  border-radius: 2px;
+  text-align: center;
+  color: #fff;
+  margin: 32px auto;
+  cursor:pointer;
+}
+
+.step-circle {
+  height: 12px;
+  width: 12px;
+  border-radius: 12px;
+  border: 2px solid #666;
+  background-color: none;
+  margin: 12px 2px;
+}
+
+.section-active {
+  background-color: #333;
+  border: 2px solid #333;
+  height: 16px;
+  width: 16px;
+  margin: 10px 0px;
+}
+
+

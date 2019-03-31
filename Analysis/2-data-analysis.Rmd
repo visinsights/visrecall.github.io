@@ -1,0 +1,536 @@
+---
+title: "Tell don't just show: Eplanatory narratives improve recall more than exploratory interactivity for communicative visualizations"
+author: "Anonymous"
+output:
+  html_document:
+    df_print: kable
+    toc: yes
+    toc_float: yes
+  pdf_document:
+    toc: yes
+---
+
+### Introduction
+This document contains our analysis from our paper, *_Tell don't just show: Eplanatory narratives improve recall more than exploratory interactivity for communicative visualizations_*, using R code and the associated output.
+
+### Setup
+
+#### Required libraries
+
+If you are missing any of the packages below, use `install.packages("packagename")` to install them.
+The `import::` syntax requires the `import` package to be installed, and provides a simple way to 
+import specific functions from a package without polluting your entire namespace (unlike `library()`)
+
+```{r setup, message = FALSE, warning = FALSE}
+library(knitr)
+opts_chunk$set(cache=FALSE, autodep=TRUE, cache.comments=FALSE,
+               message=FALSE, warning=FALSE)
+library(tidyverse)
+library(rstan)
+library(brms)
+library(magrittr)
+library(modelr)
+library(tidybayes)
+library(rstanarm)
+
+rstan_options(auto_write = TRUE)
+options(mc.cores = parallel::detectCores())
+
+theme_set(theme_minimal())
+```
+
+### Pre-registered Analysis
+
+For this analysis, we filter out the participants who have failed the attention check question (i.e. answered True to Q11). We then convert the data into long format, evaluate the responses (whether or not the participant correctly answered the question), and convert the columns into appropriate data formats so that we can conveniently fit the model
+
+```{r data_primary, warning=FALSE}
+df = read.csv('data/processed/formatted_vis_interpretation_responses.csv', header=TRUE)
+answer_key = read.csv('data/answers.csv', header=TRUE)
+  
+analysed_filtered_responses = df %>% 
+  filter( Q11 == 0 ) %>%
+  gather(., question, response, 
+                 c('Q1', 'Q2', 'Q3', 'Q4', 'Q5', 'Q6', 'Q7', 'Q8', 'Q9', 'Q10', 'Q11'), 
+                 factor_key=TRUE) %>%
+  mutate( response  = as.logical(response)) %>%
+  select(ResponseId, question, everything())%>%
+  inner_join(x = ., y = answer_key, by = c("question", "vis")) %>%
+  mutate(
+    question = factor(question),
+    correct = as.numeric((answer == response))
+  ) %>%
+  filter(question != "Q11")
+```
+
+### Model
+
+We fit the following multilevel logistic regression model to estimate the probability of answering a question correctly using interactivity and narrative as population-level effects. Group-level effects are included for each participant, question (varying intercepts) and visualization (varying slopes). For the interested reader we provide the complete model and prior family specification:
+
+$$
+\begin{align}
+Y_i &\sim \textrm{Binomial}(n_{i}, p_{i}) \\
+logit[p_{i}] &= \alpha + \alpha_{i} + \alpha_{vis[i]} + \alpha_{j, vis[i]} + \\ & (\beta_{int} + \gamma_{int, vis[i]}) x_{int} + \\ &  (\beta_{narr} + \gamma_{narr, vis[i]}) x_{narr} + \\ & (\beta_{narr \times int} + \gamma_{narr \times int, vis[i]}) x_{narr} x_{int}
+\end{align}
+$$
+
+$$
+\begin{align}
+\alpha_{i}, \alpha_{j, vis[i]} &\sim \mathrm{Normal}(0, \theta) \\
+\theta &\sim \mathrm{t}(3, 0, 10) \\
+\alpha, \beta_{int}, \beta_{narr}, \beta_{narr  \times int} &\sim \mathrm{Normal}(0, 1) \\
+\begin{bmatrix}
+    \alpha_{vis[i]} \\
+    \gamma_{int, vis[i]} \\
+    \gamma_{narr, vis[i]} \\
+    \gamma_{int \times narr, vis[i]}
+    \end{bmatrix} &\sim \mathrm{MVN}(0, \Sigma) \\
+\end{align}
+$$
+
+$$
+\begin{align}
+\Sigma &\sim 
+    \begin{pmatrix}
+        \sigma_{\alpha} & 0 & 0 & 0 \\
+        0 & \sigma_{int} & 0 & 0 \\
+        0 & 0 & \sigma_{narr} & 0 \\
+        0 & 0 & 0 & \sigma_{int \times narr}
+    \end{pmatrix} 
+    R 
+    \begin{pmatrix}
+        \sigma_{\alpha} & 0 & 0 & 0 \\
+        0 & \sigma_{int} & 0 & 0 \\
+        0 & 0 & \sigma_{narr} & 0 \\
+        0 & 0 & 0 & \sigma_{int \times narr}
+    \end{pmatrix}
+\end{align} 
+$$
+
+$$
+\begin{align}
+    \begin{pmatrix}
+        \sigma_{\alpha} & \sigma_{int} & \sigma_{narr} & \sigma_{int \times narr}
+    \end{pmatrix}
+    &\sim
+    \mathrm{t} (3, 0, 10) \\
+    \mathrm{R} \sim LKJcorr(1)
+\end{align}
+$$
+
+Variables:
+
+- $i = 1... I$ indexes persons (respondents of the survey)
+- $j = 1...J$ indexes items / number of questions on the questionnaire. Here, $J = 11$
+- $vis[i] = 1...K$ indexes the number of visualizations for a participant, i. Here $K = 4$
+- $y_{i} \in {0, 1}$ is the response by participant i.
+
+Parameters:
+
+- $\gamma_{vis[i]}$ is the coefficient for random slope for a visualization, $m$
+- $\alpha_{i}$ is the random intercept due to the ability of a person $i$
+- $\alpha_{vis[i]}$ is the random intercept due to each visualization
+- $\alpha_{j}$ is the random intercept due to the difficulty of each question $j$, in each visualization
+
+
+We fit the model using the brms package. In this document we load a pre-fitted model instead. To run the model and perform the analysis, uncomment the model command.
+
+```{r model_primary, eval = FALSE}
+# Load the model instead of fitting it
+fit_conditions_filtered = brm(correct ~ interactivity*narrative + (1|ResponseId) + (interactivity*narrative|vis) + (1|question:vis),  data = analysed_filtered_responses, family = "bernoulli", prior=prior(normal(0, 1), class=b), iter = 5000, chains = 2)
+```
+
+```{r echo = FALSE}
+load("models/thesis-model-prereg.Rdata")
+```
+
+
+### Results
+
+#### Primary analysis
+
+In our primary analysis we compare the (population-level) effects of narrative and interactivity on insight (measured using the probability of answering a question correctly). In what follows, we plot the **marginal posterior estimates** of the probability of answering a (typical) question correctly. We provide the posterior probability density, posterior mean point estimate and 66% and 95% quantile intervals. The marks represent the raw proportions of questions answered correctly in each condition.
+
+Marginal estimates are calculated by integrating over the other variables (in this case, visualization) to obtain the average effect for visualization. In other words we obtain the estimate for the probability of answering a typical question correctly given one of our designs, by a typical participant, on average.
+
+```{r estimates_conditions}
+fixed_effects_estimates <- analysed_filtered_responses %>%
+  data_grid(interactivity, narrative, vis) %>%
+  add_fitted_draws(fit_conditions_filtered, re_formula = ~(interactivity * narrative | vis)) %>%
+  ungroup() %>%
+  group_by(interactivity, narrative, .draw) %>%
+  summarise(.value = mean(.value))
+
+raw_scores <- analysed_filtered_responses %>%
+  group_by(narrative, interactivity) %>%
+  summarise(.value = mean(correct))
+
+plot <- fixed_effects_estimates %>%
+  ggplot(aes(y = interactivity, x = .value, fill = narrative)) +
+  geom_halfeyeh() +
+  facet_grid(narrative ~ .) +
+  coord_cartesian(xlim = c(0.5, 1)) + 
+  scale_x_continuous(breaks = seq(0, 1, by = 0.2)) +
+  geom_vline(xintercept = 0, lty = 2, alpha = 0.5) +
+  geom_vline(xintercept = 1, lty = 2, alpha = 0.5) +
+  geom_point(data = raw_scores, aes(x = .value, y = interactivity), size = 6, shape = 47)
+
+plot
+```
+
+```{r vector_pdf, eval = FALSE, echo = FALSE}
+pdf(file = "figures/ci_plots.pdf", useDingbats = FALSE, width = 8, height = 10)
+plot
+dev.off()
+```
+
+We could also estimate the probability of answering, on average, for the questions we have tested on our questionnaire, by a typical participant. This is the estimate marginalised over *question* (averages the variance associated with a typical question) and hence the estimates obtained are less uncertain.
+
+```{r estimates_conditions_marginalised}
+fixed_effects_estimates <- analysed_filtered_responses %>%
+  data_grid(interactivity, narrative, question, vis) %>%
+  filter(question != "Q11") %>%
+  add_fitted_draws(fit_conditions_filtered, re_formula = ~((interactivity * narrative | vis) + (1 | question:vis))) %>%
+  ungroup() %>%
+  group_by(interactivity, narrative, .draw) %>%
+  summarise(.value = mean(.value))
+
+raw_scores <- analysed_filtered_responses %>%
+  group_by(narrative, interactivity) %>%
+  summarise(.value = mean(correct))
+
+fixed_effects_estimates %>%
+  ggplot(aes(y = interactivity, x = .value, fill = narrative)) +
+  geom_halfeyeh() +
+  facet_grid(narrative ~ .) +
+  coord_cartesian(xlim = c(0.5, 1)) + 
+  scale_x_continuous(breaks = seq(0, 1, by = 0.2)) +
+  geom_vline(xintercept = 0, lty = 2, alpha = 0.5) +
+  geom_vline(xintercept = 1, lty = 2, alpha = 0.5) +
+  geom_point(data = raw_scores, aes(x = .value, y = interactivity), size = 6, shape = 47)
+```
+
+
+This shows the conditional and marginal estimates for the effect of narrative. We plot the mean point estimate, 66% & 95% CI and the posterior densities in the probability of answering a (average) question correctly for the difference between narrative and non-narrative conditions
+
+```{r mean_diff_narrative}
+fixed_effects_estimates %<>%
+  ungroup() %>%
+  mutate(
+    narrative = as.character(narrative),
+    interactivity = as.character(interactivity)
+  )
+
+rbind(
+  fixed_effects_estimates %>%
+    group_by(interactivity) %>%
+    compare_levels(.value, narrative),
+  fixed_effects_estimates %>%
+    group_by(interactivity) %>%
+    compare_levels(.value, narrative) %>%
+    group_by(narrative, .draw) %>%
+    summarise(.value = mean(.value)) %>%
+    mutate(interactivity = "Marginal")
+) %>%
+  ungroup() %>%
+  mutate(interactivity = fct_relevel(interactivity, "Marginal")) %>%
+  #group_by(interactivity) %>%  mean_qi(.value, .width = .95)
+  ggplot(aes(y = interactivity, x = .value)) +
+  geom_halfeyeh(fill = "#c69de0") +
+  coord_cartesian(xlim = c(-0.1, 0.3)) + 
+  scale_x_continuous(breaks = seq(-1, 1, by = 0.1)) + 
+  geom_vline(xintercept = 0, lty = 2, alpha = 0.5)
+```
+
+This shows the conditional and marginal estimates for the effect of interactivity. We plot the mean point estimate, 66% & 95% CI and the posterior densities in the probability of answering a (average) question correctly for the difference between interactive and non-interactive conditions.
+
+```{r mean_diff_interactivity}
+rbind(
+  fixed_effects_estimates %>%
+    group_by(narrative) %>%
+    compare_levels(.value, interactivity),
+  fixed_effects_estimates %>%
+    group_by(narrative) %>%
+    compare_levels(.value, interactivity) %>%
+    group_by(interactivity, .draw) %>%
+    summarise(.value = mean(.value)) %>%
+    mutate(narrative = "Marginal")
+) %>%
+  ungroup() %>%
+  mutate(narrative = fct_relevel(narrative, "Marginal")) %>%
+  #group_by(narrative) %>%  mean_qi(.value, .width = .95)
+  ggplot(aes(y = narrative, x = .value)) +
+  geom_halfeyeh(fill = "#a3e5d8") +
+  coord_cartesian(xlim = c(-0.2, 0.2)) + 
+  scale_x_continuous(breaks = seq(-1, 1, by = 0.1)) + 
+  geom_vline(xintercept = 0, lty = 2, alpha = 0.5)
+```
+
+The previous graphs depicted the effects of `explanatory narrative` and `interactivity` conditional on the visualizations used in our study. Our hierarchical model allows us to estimate the effect of `explanatory narrative` and `interactivity` in a new visualization not tested in our study. In the following graph, we show the marginal estimates for the effect of `explanatory narrative` and `interactivity` for a new visualization. Note, that the estimated 95% intervals are wider than the previous graphs to account for the uncertainty associated with a new visualization.
+
+```{r estimates_new_vis}
+fixed_effects_estimates_new_vis <- analysed_filtered_responses %>%
+  data_grid(interactivity, narrative) %>%
+  add_fitted_draws(fit_conditions_filtered, re_formula = ~(narrative * interactivity | vis), allow_new_levels = TRUE)
+
+rbind(
+  fixed_effects_estimates_new_vis %>%
+    compare_levels(.value, interactivity) %>%
+    gather(narrative, key = type, value = condition) %>%
+    ungroup() %>%
+    mutate(interactivity = str_replace(interactivity, "True - False", "Int - no-Int") ) %>%
+    rename (diff = interactivity), 
+  fixed_effects_estimates_new_vis %>%
+    compare_levels(.value, narrative) %>%
+    gather(interactivity, key = type, value = condition) %>%
+    ungroup() %>%
+    mutate(narrative = str_replace(narrative, "True - False", "Nar - no-Nar") ) %>%
+    rename (diff = narrative)
+) %>%
+  ggplot(aes(y = condition, x = .value, fill = type)) +
+  geom_halfeyeh() +
+  coord_cartesian(xlim = c(-0.1, 0.3)) + 
+  scale_x_continuous(breaks = seq(-1, 1, by = 0.1)) +
+  facet_grid(diff ~ .) +
+  geom_vline(xintercept = 0, lty = 2, alpha = 0.5)
+```
+
+
+We find that the presence of a \narr has a weak but positive effect on recall and comprehension---\narr increases the probability of answering a question correctly on average by 10 percentage points (95\% CI: [6.1, 14.3]). The mean effect size is of the order of getting one more question correct on the 11-item questionnaire, for an average participant, for a particular visualization. On the other hand, presence of \intn likely has little or no effect---\intn increased the probability of correctly answering a question by 2.3 percentage points (95\% CI: [--1.4, 6]).
+
+This shows (visualization) group-specific effects for answering an average question correctly. We can see the effect of varying intercepts and slopes for interactivity and narrative for each visualization, which are roughly consistent across the groups.
+
+This next two graphs show the conditional and marginal estimates emphasizing the (visualization) group-specific effects. We plot the mean point estimate, 66% & 95% CI and the posterior densities in the probability of answering a (average) question correctly for the difference between 1) narrative and non-narrative, and (2) interactive and non-interactive. This shows that the effects are consistent within each group.
+
+```{r mean_diff_vis_narrative}
+group_effects_estimates <-  analysed_filtered_responses %>%
+  data_grid(interactivity, narrative, vis) %>%
+  add_fitted_draws(fit_conditions_filtered, re_formula = ~(interactivity*narrative|vis))
+
+group_effects_estimates %>%
+  group_by(interactivity, vis) %>%
+  compare_levels(.value, narrative) %>%
+  ggplot(aes(y = vis, x = .value)) +
+  geom_halfeyeh(fill = "#c69de0") +
+  facet_grid(interactivity ~ .) +
+  coord_cartesian(xlim = c(-0.1, 0.3)) + 
+  scale_x_continuous(breaks = seq(-1, 1, by = 0.1)) + 
+  geom_vline(xintercept = 0, lty = 2, alpha = 0.5)
+```
+
+```{r mean_diff_vis_interactivity}
+group_effects_estimates %>%
+  group_by(narrative, vis) %>%
+  compare_levels(.value, interactivity) %>%
+  ggplot(aes(y = vis, x = .value)) +
+  geom_halfeyeh( fill = "#a3e5d8" ) +
+  facet_grid(narrative ~ .) +
+  coord_cartesian(xlim = c(-0.2, 0.2)) + 
+  scale_x_continuous(breaks = seq(-1, 1, by = 0.1)) + 
+  geom_vline(xintercept = 0, lty = 2, alpha = 0.5)
+```
+
+
+#### Alternate Analysis
+*including the participants who failed the attention check question*
+We repeat the analysis performed above, but this time we also include the participants who have failed the attention check question. We see that the results are very similar to the pre-registered model, hence this is not included in the paper. One difference here, from the previous analysis, is that we include the attention check question, since now we are no longer conditioning on the response to Q11 to be `TRUE`. This means that our analysis is now on the 11-item questionnaire.
+
+```{r data_primary_non_prereg}
+analysed_responses = df %>%
+  gather(., question, response, 
+                 c('Q1', 'Q2', 'Q3', 'Q4', 'Q5', 'Q6', 'Q7', 'Q8', 'Q9', 'Q10', 'Q11'), 
+                 factor_key=TRUE) %>%
+  mutate( response  = as.logical(response)) %>%
+  .[order(.$ResponseId, .$question),] %>%
+  inner_join(x = ., y = answer_key, by = c("question", "vis")) %>%
+  mutate(
+    question = factor(question),
+    vis = factor(vis),
+    correct = as.numeric((answer == response)))
+```
+
+```{r echo = FALSE}
+load("models/thesis-model-all-data.Rdata")
+```
+
+```{r eval = FALSE}
+fit_conditions = brm(correct ~ interactivity*narrative + (1|ResponseId) + (interactivity*narrative|vis) + (1|question:vis), data = analysed_responses, family = "bernoulli", prior=prior(normal(0, 1), class=b), iter = 5000, chains = 2)
+```
+
+Posterior density, mean point estimates and 66% and 95% CIs:
+
+```{r estimates_conditions_non_prereg, echo=FALSE}
+fixed_effects_estimates_all_data <- analysed_responses %>%
+  data_grid(interactivity, narrative, vis, question) %>%
+  add_fitted_draws(fit_conditions, re_formula = ~(interactivity*narrative|vis)) %>%
+  group_by(narrative, interactivity, .draw) %>%
+  summarise(.value = mean(.value))
+
+fixed_effects_estimates_all_data %>%
+  ggplot(aes(y = interactivity, x = .value, fill = narrative)) +
+  geom_halfeyeh() +
+  facet_grid(narrative ~ .) +
+  coord_cartesian(xlim = c(0.6, 1)) + 
+  scale_x_continuous(breaks = seq(0, 1, by = 0.2)) +
+  geom_vline(xintercept = 0, lty = 2, alpha = 0.5) +
+  geom_vline(xintercept = 1, lty = 2, alpha = 0.5)
+```
+
+Effect of Narrative:
+
+```{r mean_diff_narrative_non_prereg, echo=FALSE}
+rbind(
+  fixed_effects_estimates_all_data %>%
+    group_by(interactivity) %>%
+    compare_levels(.value, narrative),
+  fixed_effects_estimates_all_data %>%
+    group_by(interactivity) %>%
+    compare_levels(.value, narrative) %>%
+    group_by(narrative, .draw) %>%
+    summarise(.value = mean(.value)) %>%
+    mutate(interactivity = "Marginal")
+) %>%
+  ungroup() %>%
+  mutate(interactivity = fct_relevel(interactivity, "Marginal")) %>%
+  ggplot(aes(y = interactivity, x = .value)) +
+  geom_halfeyeh(fill = "#c69de0") +
+  coord_cartesian(xlim = c(-0.1, 0.3)) + 
+  scale_x_continuous(breaks = seq(-1, 1, by = 0.1)) + 
+  geom_vline(xintercept = 0, lty = 2, alpha = 0.5)
+```
+
+Effect of Interactivity:
+
+```{r mean_diff_interactivity_non_prereg, echo=FALSE}
+rbind(
+  fixed_effects_estimates_all_data %>%
+    group_by(narrative) %>%
+    compare_levels(.value, interactivity),
+  fixed_effects_estimates_all_data %>%
+    group_by(narrative) %>%
+    compare_levels(.value, interactivity) %>%
+    group_by(interactivity, .draw) %>%
+    summarise(.value = mean(.value)) %>%
+    mutate(narrative = "Marginal")
+) %>%
+  ungroup() %>%
+  mutate(narrative = fct_relevel(narrative, "Marginal")) %>%
+  ggplot(aes(y = narrative, x = .value)) +
+  geom_halfeyeh(fill = "#a3e5d8") +
+  coord_cartesian(xlim = c(-0.2, 0.2)) + 
+  scale_x_continuous(breaks = seq(-1, 1, by = 0.1)) + 
+  geom_vline(xintercept = 0, lty = 2, alpha = 0.5)
+```
+
+### Exploratory analysis
+
+In our exploratory analysis we investigate whether ```narratives``` and ```interactivity``` have an effect on some commonly used measures of engagement such as uptime. We also investigate whether engagement measures can be used to measure insight, by calculating whether more engagement can increase the probability of answering a question correctly.
+
+```{r data_secondary}
+engagement_measures = read.csv('data/processed/formatted_vis_engagement_logs.csv', header = TRUE)
+```
+
+Histogram of time spent on the visualization. As expected we see a long tailed distribution, which is approximately normal.
+
+```{r plot_uptime, message = FALSE, warning=FALSE}
+engagement_measures %>%
+  ggplot(aes(uptime)) +
+  scale_x_log10() +
+  geom_histogram()
+```
+
+Histogram of number of interactions with the visualization. As expected we see a long tailed distribution, which is approximately normal. However, as discussed in the paper, number of interactions cannot be consistently measured across chart types, hence we only analyse the effects of number of interactions within a given visualization (chart type).
+
+```{r plot_interactions, message = FALSE, warning=FALSE}
+engagement_measures %>%
+  filter(interactivity == 'True') %>%
+  ggplot(aes(interactions)) +
+  geom_histogram()
+```
+
+Effect of interactivity and narrative on time spent on the visualization. We fit a multi-level logistic regression model.
+
+```{r echo = FALSE}
+load("models/engagement_effects_model.Rdata")
+```
+
+```{r model_replication, eval = FALSE, message = FALSE, warning=FALSE}
+fit_engagement_time = stan_glmer(log(uptime) ~ interactivity*narrative + (interactivity*narrative|vis), data = engagement_measures)
+
+fit_engagement_intx = engagement_measures %>%
+  filter(interactivity == "True" & interactions >= 0) %>%
+  stan_glmer(interactions ~ narrative + (narrative|vis), data = ., family = neg_binomial_2)
+```
+
+The follwoing plots show the conditional and marginal estimates for the effect of ```narrative``` and ```interactivity``` on ```uptime```. We plot the mean point estimate, 66% & 95% CI and the posterior densities in the probability of answering a (average) question correctly for (1) the estimates for each condition, and the differences between (2) narrative and non-narrative conditions and (3) interactive and non-interactive conditions.
+
+```{r estimates_uptime, message = FALSE, warning=FALSE}
+ fixef_engagement <- engagement_measures %>% # this is affecting the data_grid, but we are not interested in the group-level effects
+  data_grid(narrative, interactivity) %>%
+  add_fitted_draws(fit_engagement_time, re_formula = NA)
+
+fixef_engagement %>%
+  ggplot(aes(y = interactivity, x = exp(.value), fill = narrative)) +
+  geom_halfeyeh() +
+  facet_grid(narrative~.) +
+  coord_cartesian(xlim = c(0, 300)) +
+  xlab("Time (in seconds)")
+```
+
+```{r estimates_interactions, message = FALSE, warning=FALSE}
+engagement_measures %>% # this is affecting the data_grid, but we are not interested in the group-level effects
+  data_grid(narrative, vis) %>%
+  add_fitted_draws(fit_engagement_intx, re_formula = ~(narrative|vis)) %>%
+  group_by(narrative, .draw) %>%
+  summarise(.value = mean(.value)) %>%
+  ggplot(aes(y = narrative, x = .value, fill = narrative)) +
+  geom_halfeyeh() +
+  coord_cartesian(xlim = c(0, 25)) +
+  xlab("number of interactions")
+```
+
+This is the second part of our exploratory analyses. We investigate whether engagement metrics such as uptime and number of interactions are correlated with insight, since engagement is commonly used as a proxy for insight.
+
+```{r models_engagement_recall, eval = FALSE, message = FALSE, warning = FALSE}
+fit_correct_time <- engagement_measures %>%
+  filter(interactions > 0 & uptime > 15) %>%
+  stan_glmer(correct ~ (log(uptime) | vis), data = .)
+
+fit_correct_intx <- engagement_measures %>%
+  filter(interactions > 0 & uptime > 15) %>%
+  stan_glmer(correct ~ (interactions | vis), data = .)
+```
+
+The following plots show the correlation between the number of correctly answered questions and the metrics of user behavior: ``total time spent on the visualizaiton`` and ``number of non-trivial interactions performed with the visualization`` respectively. The raw data is plotted as red points.
+
+```{r plot_uptime_recall}
+engagement_measures %>%
+  filter(interactions > 0 & uptime > 5)  %>%
+  add_fitted_draws(fit_correct_time) %>%
+  group_by(uptime, .draw, vis) %>%
+  summarise(.value = mean(.value)) %>%
+  ggplot(aes(x = uptime, y = correct)) +
+  stat_lineribbon(aes(y = .value), .width = c(.95, .8, .5), colour = "#08519C") +
+  geom_point(data = engagement_measures  %>%  filter(interactions > 0 & uptime > 15), size = 1, colour = "red", alpha = 0.5) +
+  scale_fill_brewer() +
+  facet_grid(. ~ vis, scales = "free") +
+  scale_x_log10() +
+  scale_y_continuous(breaks =  seq(0, 10, by = 2)) +
+  coord_cartesian(ylim = c(2, 10)) +
+  xlab("time (in seconds)")
+```
+
+```{r plot_interactions_recall}
+engagement_measures %>%
+  filter(interactions > 0 & uptime > 5)  %>%
+  add_fitted_draws(fit_correct_intx) %>%
+  group_by(interactions, .draw, vis) %>%
+  summarise(.value = mean(.value)) %>%
+  ggplot(aes(x = interactions, y = correct)) +
+  stat_lineribbon(aes(y = .value), .width = c(.95, .8, .5), colour = "#08519C") +
+  geom_point(data = engagement_measures  %>%  filter(interactions > 0), size = 1, colour = "red", alpha = 0.5) +
+  scale_fill_brewer() +
+  facet_grid(. ~ vis, scales = "free")  +
+  scale_y_continuous(breaks =  seq(0, 10, by = 2)) +
+  coord_cartesian(ylim = c(2, 10)) +
+  xlab("number of interactions")
+```

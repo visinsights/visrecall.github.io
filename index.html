@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Tell don't just show</title>
+
+    <!-- D3 and JQuery Javascript -->
+    <script  src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+    <!-- Bootstrap Core CSS  -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link href="vis/css/custom.css" rel="stylesheet">
+    <style>
+    </style>
+</head>
+
+<body>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-8">
+				<h1>Tell don't just show: Explanatory narrative may improve recall morethan exploratory interactivity in communicative visualization</h1>
+				<p>
+					<span id="ht">The material on this website is currently confidential, for IEEE VIS 2019 reviewers only. Do not share the link!</span>
+					<br><br>
+					This is the companion website for the paper <i>Tell don't just show: Explanatory narrative may improve recall morethan exploratory interactivity in communicative visualization</i>, submitted to IEEE VIS 2019.
+					<br><br>
+					If you are running this locally, please setup a local server in your computer.
+					<br><br>
+					In this website, we provide links to the visualizations that were shown to the participants to evaluate the effects of <b>narrative</b> and <b>interactivity</b> on insight. Since the visualizations were created in D3, they require a local server to be set up. Hence, for convenience, we have provided a website: <a class="inline" href="https://visinsights.github.io">visinsights.github.io</a> with links to each of the visualizations that we redesigned and used in the study. In addition, we also provide links to the questionnaires, and the files used for our data analyses.
+				</p>
+			</div>
+		</div>		
+		<div class="row">
+			<div class="col-md-8">
+				<h4 style="margin: 48px 0px 24px 0px">Analysis</h4>
+				<p>We pre-registered our study, data collection plan and data analysis model on <a class="inline" href="https://aspredicted.org/">AsPredicted</a>. We have redacted parts of the document to preserve anonymity as the document was accidently made public.
+				<a href="pre-registration.pdf" target="_blank">Pre-registration document <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+				</p>
+				<br>
+				<p>Link to questionnaire:
+				<a href="Qualtrics_Survey.pdf" target="_blank">Questionnaire <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+				</p>
+				<br>
+				<p>We performed data cleaning, formatting and performed our analysis in R. We created markdown documents which describes the <a class="inline" href="http://htmlpreview.github.io/?https://github.com/visinsights/visinsights-website/blob/master/Analysis/data-cleaning.html">data cleaning</a> and <a class="inline" href="http://htmlpreview.github.io/?https://github.com/visinsights/visinsights-website/blob/master/Analysis/data-analysis.html">data analysis</a> process. You can access the files using the following links:<br>
+					<a href="http://htmlpreview.github.io/?https://github.com/visinsights/visinsights-website/blob/master/Analysis/data-cleaning.html" target="_blank">data cleaning <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+					<a href="http://htmlpreview.github.io/?https://github.com/visinsights/visinsights-website/blob/master/Analysis/data-analysis.html" target="_blank">data analysis <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+				</p>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-8"><h4 style="margin: 48px 0px 24px 0px">Visualizations</h4></div>
+			<div class="col-md-6">
+				<div class="thumbnail">
+					<div class="banner" style="background-image: url('img/gun-deaths.png');"></div>
+					<div class="href-container">
+						<h6>fivethirtyeight: Gun Deaths in America</h6>
+						<a href="vis/gun-deaths-all">Narrative+Interactivity <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+						<a href="vis/gun-deaths-story">Narrative+no-Interactivity <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+						<a href="vis/gun-deaths-int">no-Narrative+Interactivity <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+						<a href="vis/gun-deaths-none">no-Narrative+no-Interactivity <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+						<br>
+						<a href="https://fivethirtyeight.com/features/gun-deaths/">Original <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="thumbnail">
+					<div class="banner" style="background-image: url('img/carbon-clock.png');"></div>
+					<div class="href-container">
+						<h6>Bloomberg: Carbon Clock</h6>
+						<a href="vis/carbon-clock-all">Narrative+Interactivity  <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+						<a href="vis/carbon-clock-story">Narrative+no-Interactivity  <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+						<a href="vis/carbon-clock-int">no-Narrative+Interactivity  <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+						<a href="vis/carbon-clock-none">no-Narrative+no-Interactivity  <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+						<br>
+						<a href="https://www.bloomberg.com/graphics/carbon-clock/">Original <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="thumbnail">
+					<div class="banner" style="background-image: url('img/measles.png');"></div>
+					<div class="href-container">
+						<h6>The Guardian: Spread of Measles</h6>
+						<a href="vis/measles-all">Narrative+Interactivity <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+						<a href="vis/measles-story">Narrative+no-Interactivity <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+						<a href="vis/measles-int">no-Narrative+Interactivity <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+						<a href="vis/measles-none">no-Narrative+no-Interactivity <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+						<br>
+						<a href="https://www.theguardian.com/society/ng-interactive/2015/feb/05/-sp-watch-how-measles-outbreak-spreads-when-kids-get-vaccinated">Original <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="thumbnail">
+					<div class="banner" style="background-image: url('img/healthcare.png');"></div>
+					<div class="href-container">
+						<h6>Bloomberg: Americans spend the most on healthcare</h6>
+						<a href="vis/us-healthcare-all">Narrative+Interactivity <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+						<a href="vis/us-healthcare-story">Narrative+no-Interactivity <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+						<a href="vis/us-healthcare-int">no-Narrative+Interactivity <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+						<a href="vis/us-healthcare-none">no-Narrative+no-Interactivity <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+						<br>
+						<a href="https://www.bloomberg.com/graphics/2017-health-care-spending/">Original <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="footer">
+		<p class="text-center">Last updated: Sep 16, 2018</p>
+	</div>
+</body>
+</html>

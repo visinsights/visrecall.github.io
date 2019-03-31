@@ -1,0 +1,96 @@
+@font-face {
+  font-family: futura-b;
+  src: url(../futura/FuturaStd-Heavy.otf);
+}
+
+@font-face {
+  font-family: futura-bb;
+  src: url(../futura/FuturaStd-Bold.otf);
+}
+
+h1{
+  font-family: 'Futura-bb', 'serif';
+  font-size: 32px;
+  line-height: 40px;
+  margin-bottom: 32px;
+}
+
+h4{
+  font-family: 'Futura-b', 'serif';
+  font-size: 21px;
+  line-height: 24px;
+}
+
+h6{
+  font-family: 'Futura-b', 'serif';
+  font-size: 18px;
+  line-height: 21px;
+}
+
+p {
+  font-family: 'Avenir Next', 'sans-serif';
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 18px;
+}
+
+i {
+  font-family: 'Avenir Next', 'sans-serif';
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 18px;
+  font-style: italic;
+}
+
+span#ht {
+  color: #dc2127;
+}
+
+.thumbnail {
+  border: 1px solid #d0d0d0;
+  padding: 0px !important;
+}
+
+.banner {
+  height: 240px;
+  width: 100%;
+  background-position: center center;
+  background-size: 100%;
+}
+
+.thumbnail-banner{
+  width: 100%;
+}
+
+a {
+  display: block;
+  font-family: 'Avenir Next', 'sans-serif';
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 22px;
+  color: #777;
+}
+
+a:hover,
+a:focus,
+a:active{
+  color: #dc2127;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+a.inline {
+  display: inline-block;
+}
+
+.href-container{
+  border-top: 1px solid #d0d0d0;
+  padding: 8px 32px 16px 32px;
+}
+
+.footer {
+  margin-top: 40px;
+  padding: 60px 0px;
+  background-color: #f6f6f6;
+  width: 100%;
+}

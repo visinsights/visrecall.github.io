@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>The Spread of Measles</title>
+
+        <!-- D3 and JQuery Javascript -->
+        <script  src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+        <script src="https://d3js.org/d3.v4.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/seedrandom/2.4.3/seedrandom.min.js"></script>
+        <script src="timeme.js"></script>
+
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+        <!-- Bootstrap Core CSS  -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <!-- Fonts  -->
+        <link href="https://fonts.googleapis.com/css?family=Gentium+Book+Basic:400,700" rel="stylesheet">
+        <!-- Custom CSS -->
+        <link href="css/custom.css" rel="stylesheet">
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8">
+                    <h1>How the measles outbreak spreads when kids get vaccinated – and when they don't</h1>
+                    <p class="margin-top-sm">
+                    A majority of the infections during measles outbreaks are unvaccinated people. Only very highly vaccinated groups are able to consistently block measles infection from their community, showing just how important high rates of immunization can be. The graphic below presents 6 hypothetical communities with different vaccination rates and illustrates how herd immunity works. All the dots represent people who are the same or similar ages, such as school children. There are no babies or non-immune elderly folks in our examples, but there are some children who can’t get the vaccine for medical reasons.<br><br>The sample children above are in close contact and they mix randomly and they each have an equal chance of coming into contact with someone from the outside world who is infected with measles – the incoming red dots. Measles is extremely infectious - the simulation below shows how it spreads within a community.</p>
+                </div>
+            </div>
+            <div class="row" id="graph">
+                <div class="col-md-12">
+                    <div class="icon-container">
+                        <svg display="block" width="900" height="36">
+                            <circle r="12" fill="#94b1ca" stroke = "#94b1ca" cx="12" cy="18"></circle>
+                            <text x="32" y="24" text-anchor="start">vaccinated</text>
+
+                            <circle r="12" fill="#ffce4b" stroke = "#ffce4b" cx="140" cy="18"></circle>
+                            <text x="160" y="24" text-anchor="start">susceptible</text>
+
+                            <circle r="12" fill="#ffce4b" stroke = "#94b1ca" stroke-width="3" cx="280" cy="18"></circle>
+                            <text x="300" y="24" text-anchor="start">vaccinated, but susceptible</text>                        
+
+                            <circle r="12" fill="#b51800" stroke = "#b51800" cx="520" cy="18"></circle>
+                            <text x="540" y="24" text-anchor="start">infected</text>
+
+                            <circle r="8" fill="#b51800" stroke = "#b51800" cx="640" cy="20"></circle>
+                            <text x="660" y="24" text-anchor="start">contact with an infected person</text>
+                        </svg>
+                    </div>
+                    <button class="sim-button">Start Simulation</button>
+                <hr>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <svg class="graph _58" width="220" height="220"></svg>
+                        <div class="status-container">
+                            <p class="infect-status _58">PROTECTED</p>
+                            <div class="bar _58 vaccinated"></div><div class="bar _58 susceptible"></div><div class="bar _58 infected"></div>
+                            <p class="">58.5% vax rate<br>similar to Okanagan County, WA</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <svg class="graph _69" width="220" height="220"></svg>
+                        <div class="status-container">
+                            <p class="infect-status _69">PROTECTED</p>
+                            <div class="bar _69 vaccinated"></div><div class="bar _69 susceptible"></div><div class="bar _69 infected"></div>
+                            <p class="">68.9% vax rate<br>similar to Thurston County, WA</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <svg class="graph _86" width="220" height="220"></svg>
+                        <div class="status-container">
+                            <p class="infect-status _86">PROTECTED</p>
+                            <div class="bar _86 vaccinated"></div><div class="bar _86 susceptible"></div><div class="bar _86 infected"></div>
+                            <p class="">86% vax rate<br>similar to Santa Cruz, CA</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 80px">
+                    <div class="col-md-3">
+                        <svg class="graph _90" width="220" height="220"></svg>
+                        <div class="status-container">
+                            <p class="infect-status _90">PROTECTED</p>
+                            <div class="bar _90 vaccinated"></div><div class="bar _90 susceptible"></div><div class="bar _90 infected"></div>
+                            <p class="">90% vax rate<br>similar to Los Angeles County, CA</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <svg class="graph _95" width="220" height="220"></svg>
+                        <div class="status-container">
+                            <p class="infect-status _95">PROTECTED</p>
+                            <div class="bar _95 vaccinated"></div><div class="bar _95 susceptible"></div><div class="bar _95 infected"></div>
+                            <p class="">95% vax rate<br>similar to Providence, RI</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <svg class="graph _99" width="220" height="220"></svg>
+                        <div class="status-container">
+                            <p class="infect-status _99">PROTECTED</p>
+                            <div class="bar _99 vaccinated"></div><div class="bar _99 susceptible"></div><div class="bar _99 infected"></div>
+                            <p class="">99% vax rate<br>similar to Gadsden County, FL</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <div class="survey-button">Questionnaire <i class="fa fa-long-arrow-right" aria-hidden="true"></i></div>
+        </div>
+    </body>
+    <script src="custom.js"></script>
+    <script>
+        $(document).ready(function() {
+            function disableBack() { window.history.forward() }
+
+            window.onload = disableBack();
+            window.onpageshow = function(evt) { if (evt.persisted) disableBack() }
+        });
+
+        var position
+        $(".sim-button").on('click', startAnimation);
+
+        d3.json('position.json', function(data){
+            position = data
+        
+            p = [58, 69, 86, 90, 95, 99];
+            
+            drawGraph(p);            
+        });
+
+        function drawGraph(p){
+            var qq = d3.queue();
+            //enqueue 5 calls to the disease spread animation function
+            for (let i = 0; i < p.length; i++) {
+                let drawGraphCompleteFactory = function (callback) {
+                    setTimeout(function () {
+                        initGraph(p[i], i);
+                        callback(null);
+                    }, (i+5)*200);
+                }
+                qq.defer(drawGraphCompleteFactory);
+            }
+        }
+
+        function resetGraph(){
+            d3.selectAll('svg.graph').selectAll('*').remove();
+            drawGraph(p);
+            $(".sim-button").off('click').html('Start Simulation').on('click', startAnimation);
+        }
+    </script>
+</html>

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>Atmospheric CO2 levels</title>
+
+        <!-- D3 and JQuery Javascript -->
+        <script  src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+        <script src="https://d3js.org/d3.v4.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-annotation/2.1.0/d3-annotation.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.21.0/moment.js"></script>
+        <script src="js/timeme.js"></script>
+
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+        <!-- Bootstrap Core CSS  -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+        <!-- Custom CSS -->
+        <link href="css/custom.css" rel="stylesheet">
+        <style>
+            #container{
+                position: relative;
+            }
+
+            #sections{
+                width: 320px;
+                margin-top: -320px;
+                padding-bottom: 360px;
+                z-index: -1;
+            }
+
+            #sections > div{
+                background-color: rgba(255, 255, 255, 0.8);
+                opacity: 0;
+                margin-bottom: 400px;
+            }
+            #sections > div:last-child{
+                margin-bottom: 30px;
+            }
+            #sections > div.graph-scroll-active{
+                opacity: 1;
+            }
+
+            #graph{
+                margin-left: 0px;
+                width: 1140px;
+                position: -webkit-sticky;
+                position: sticky;
+                top: 144px;
+            }
+
+            .btn-default{
+                min-width: 144px !important;
+            }
+
+            .overlay {
+                fill: none;
+                pointer-events: all;
+            }
+
+            .int-line {
+                clip-path: url(#clip);
+            }
+
+            .steps{
+                top: 50%;
+                transform:translateY(-50%);
+                position: fixed;
+                right: 50px;
+            }
+        </style>
+        <script>
+            window.onbeforeunload = function(){ window.scrollTo(0,0); }
+        </script>
+    </head>
+
+    <body>
+        <div class="navbar">
+            <div class="container">
+                <h1>Atmospheric CO<sub>2</sub> levels</h1>
+                <div id="carbon-clock">
+                    <h6>Current Atmospheric CO<sub>2</sub>: <span id="carbon-ppm">409.82753080</span> parts per million</h6>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="instructions text-center">
+                <i class="material-icons">arrow_drop_down_circle</i>
+                <p>Use up / down arrow keys to scroll up / down</p>
+            </div>
+            <div id='container' class='container-story'>
+                <div id='graph'></div>
+                <div id='sections'>
+                    <div class="story-text">
+                        <p>Carbon dioxide pollution is the primary reason the Earth is warming. The number you see here estimates the level of CO<sub>2</sub> in the Earth’s atmosphere right now, based on monthly averages.</p>
+                    </div>
+                    <div class="story-text">
+                        <p>CO<sub>2</sub> is measured in parts per million, a tiny increment with huge effects. If you take any given volume of air in the atmosphere, and divide it into a million parts, a certain number of those parts will be carbon dioxide.</p>
+                    </div>
+                    <div class="story-text">
+                        <p>When the U.S. started measuring CO<sub>2</sub> started measuring airborne CO<sub>2</sub> in 1958, it stood at 316 ppm. The higher the number climbs over time, the greater the risks from climate change.<br><br>When the U.S. started measuring airborne CO<sub>2</sub> in 1958, it stood at <span class="highlight">316 ppm</span>.</p>
+                    </div>
+                    <div class="story-text">
+                        <p>In the 800,000 years before industrialization, the CO<sub>2</sub> level hovered below <span class="highlight">280 ppm</span>.</p>
+                    </div>
+                    <div class="story-text">
+                        <p>In the last 12k years, CO<sub>2</sub> levels were never beyond <span class="highlight">285 ppm</span>. But the 20th century saw a sharp increase that continues today.<br><br>The CO<sub>2</sub> level is now <span class="highlight-alt">over 400 ppm</span>. <b>The danger zone? 450 ppm</b>, which we may hit by 2040. Beyond that, the warming Earth and its inhabitants will likely experience extreme weather events, increased sea-level rise, and their consequent ecological and economic impacts.</p>
+                    </div>
+                    <div class="story-text">
+                        <p>The last 60 years have seen a constant, steady and gradual increase in atmospheric CO<sub>2</sub> levels.</p>
+                    </div>
+                    <div class="story-text">
+                        <p>Don't be fooled when the CO<sub>2</sub> level <span class="highlight-alt">falls</span> each year between March and September.<br><br>That's when vegetation in the Northern Hemisphere absorbs carbon from the air. At summer's end, the carbon levels climb back up.</p>
+                    </div>
+                    <div class="story-text">
+                        <p>For decades, the lowest CO<sub>2</sub> level of any given year has been higher than the year before. So in the long run...even when CO<sub>2</sub> is going down, it’s going up.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <h6>Explore the data...</h6>
+            <div id='container' class='container-interact'>
+                <div class="row">
+                    <div class="col-md-10">
+                        <div id='graph-int'>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div id="filters">
+                            <div>
+                                <button onclick="updateInteract(carbonDataInt, 6, this.id);" class="sim-button" id="last10">last 6 years</button>
+                                <button onclick="updateInteract(carbonDataInt, 60, this.id)" class="sim-button selected" id="last60">last 60 years</button>
+                                <button onclick="updateInteract(carbonDataInt, 12000, this.id)" class="sim-button" id="last12k">last 12,000 years</button>
+                                <button onclick="updateInteract(carbonDataInt, 800000, this.id)" class="sim-button" id="last800k">last 800,000 years</button>
+                            </div>
+                            <div style="margin-top: 144px">
+                                <p class="instructional-text">Drag the ends of the shaded rectangle or reposition it to interact with the data.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="steps"></div>
+            </div>
+        </div>
+        <div class="footer">
+            <div class="survey-button">Questionnaire <i class="fa fa-long-arrow-right" aria-hidden="true"></i></div>
+        </div>
+    </body>
+
+    <!-- <script src="js/d3v4+jetpack.js"></script> -->
+    <script src="js/graph-scroll.js"></script>
+    <script src="js/custom.js"></script>
+    <script src="js/interactive.js"></script>
+    <script>
+        // Disabling the return to this page from the survey
+        var start = moment([2018, 2, 24, 9, 44, 5]);
+        var rate = 1 / (10000 * 180);
+        var base = 409.63900004;
+
+        setInterval(function () {
+            var now = moment([]);
+            var ppm = ((now.diff(start, 'seconds', true)) * rate + base).toFixed(8);
+            $("#carbon-ppm").html(ppm);
+        }, 50);
+    
+        document.onkeydown = checkKey;
+        function checkKey(e) {
+            e = e || window.event;
+            if (e.keyCode == '38' || e.keyCode == '40') {
+                $('div.instructions').hide();
+            }
+        }
+    </script>
+</html>

@@ -1,0 +1,120 @@
+@font-face {
+  font-family: futura-b;
+  src: url(../../futura/FuturaStd-Heavy.otf);
+}
+
+@font-face {
+  font-family: futura-bb;
+  src: url(../../futura/FuturaStd-Bold.otf);
+}
+
+h1{
+  font-family: 'Futura-bb', 'serif';
+  font-size: 32px;
+  line-height: 40px;
+}
+
+h6{
+  font-family: 'Futura-b', 'serif';
+  font-size: 18px;
+  line-height: 21px;
+}
+
+p {
+  font-family: 'Avenir Next', serif;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 20px;
+}
+
+p.death-desc {
+  font-family: 'Avenir Next', serif;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 20px;
+}
+
+.count {
+  font-family: 'Avenir Next', sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  color: #dc2127;
+}
+
+.inline-text {
+  display: inline-block;
+}
+
+.margin-top-sm {
+  margin-top: 24px;
+}
+
+.margin-top-md {
+  margin-top: 48px;
+}
+
+.margin-btm-md {
+  margin-bottom: 48px;
+}
+
+.margin-lg {
+  margin: 80px 0px;
+}
+
+.axis path,
+.axis line{
+    fill: none;
+    stroke: #aaa;
+    stroke-width: 1px;
+    shape-rendering: crispEdges;
+}
+
+text {
+  font-family: 'Avenir Next', sans-serif;
+  font-size: 14px;
+}
+
+p.caption {
+  font-size: 14px;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.footer {
+  background-color: #fafafa;
+  margin-top: 80px;
+  padding: 48px 0px;
+}
+
+.survey-button {
+  width: 160px;
+  height: 32px;
+  line-height: 32px;
+  font-family: 'Avenir Next', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  background-color: #2a2a2a;
+  border-radius: 2px;
+  text-align: center;
+  color: #fff;
+  margin: 32px auto;
+  cursor:pointer;
+}
+
+.step-circle {
+  height: 12px;
+  width: 12px;
+  border-radius: 12px;
+  border: 2px solid #666;
+  background-color: none;
+  margin: 12px 2px;
+}
+
+.section-active {
+  background-color: #333;
+  border: 2px solid #333;
+  height: 16px;
+  width: 16px;
+  margin: 10px 0px;
+}

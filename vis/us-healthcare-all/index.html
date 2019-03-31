@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Americans Die Younger Despite Spending the Most on Health Care</title>
+
+    <!-- D3 and JQuery Javascript -->
+    <script  src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="js/timeme.js"></script>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+    <!-- Bootstrap Core CSS  -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link href="css/custom.css" rel="stylesheet">
+    <style>
+        #container{
+            position: relative;
+        }
+
+        #sections{
+            width: 340px;
+            margin-top: 150px;
+            padding-bottom: 360px;
+        }
+
+        #sections > div{
+            background: white;
+            opacity: .2;
+            margin-bottom: 400px;
+        }
+        #sections > div:last-child{
+            margin-bottom: 200px;
+        }
+        #sections > div.graph-scroll-active{
+            opacity: 1;
+        }
+
+        #graph{
+            margin-left: 40px;
+            width: 800px;
+            position: -webkit-sticky;
+            position: sticky;
+            top: 144px;
+            float: right;
+        }
+
+        .background path {
+            fill: none;
+            stroke: #ddd;
+        }
+
+        .foreground path {
+            fill: none;
+            stroke: #666;
+            stroke-width: 2px;
+        }
+
+        .label-container{
+            height: 54px;
+            margin: 16px auto 0px auto;
+            width: 300px;
+            text-align: center;
+            padding: 8px 0px;
+        }
+
+        .dropdown {
+            height: 54px;            
+        }
+
+        .category-label {
+            color: #333;
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 20px;
+        }
+
+        button {
+            width: 300px !important;
+            white-space: normal;
+        }
+
+        .dropdown {
+            height: 54px;
+        }
+
+        .steps{
+            top: 50%;
+            transform:translateY(-50%);
+            position: fixed;
+            right: 50px;
+        }
+    </style>
+    <script type="text/javascript">
+        window.onbeforeunload = function(){ 
+            window.scrollTo(0,0); 
+        }
+
+        $(function(){
+            $(".dropdown-menu.dropdown-bar").on('click', 'li a', function(){
+                replace = $(this).text();
+                $(this).parent().parent().prev().html(replace+ ' <span class="caret"></span>');
+            });
+        })
+    </script>
+</head>
+
+<body>
+    <div class="navbar">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h1>Americans Die Younger Despite Spending the Most on Health Care</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="instructions text-center">
+            <i class="material-icons">arrow_drop_down_circle</i>
+            <p>Use up / down arrow keys to scroll up / down</p>
+        </div>
+        <div class="row">
+            <div id='container'>
+                <div id="graph" class="text-center">
+                    <h4>Cost vs Care</h4>
+                    <div class="row">
+                        <div class="col-md-6 text-center">
+                            <div class="label-container"><p class="category-label label-exp">Per-capita spending on health care ($)</p></div>
+                            <div class="dropdown custom-drop">
+                                <button class="dropdown-toggle" type="button" data-toggle="dropdown">Per-capita spending on health care ($)
+                                <span class="caret"></span></button>
+                                <ul class="dropdown-menu dropdown-bar">
+                                    <li><a onclick="updateData(healthData, this.text, dimOutcome)">Per-capita spending on health care ($)</a></li>
+                                    <li><a onclick="updateData(healthData, this.text, dimOutcome)">Health care spending as a share of GDP (%)</a></li>
+                                    <li><a onclick="updateData(healthData, this.text, dimOutcome)">Government spending on health care (%)</a></li>
+                                    <li><a onclick="updateData(healthData, this.text, dimOutcome)">Compulsory/contributory insurance & medical savings accounts (%)</a></li>
+                                    <li><a onclick="updateData(healthData, this.text, dimOutcome)">Out-of-pocket costs (%)</a></li>
+                                    <li><a onclick="updateData(healthData, this.text, dimOutcome)">Voluntary health insurance (%)</a></li>
+                                    <li><a onclick="updateData(healthData, this.text, dimOutcome)">Per-capita spending on pharmaceuticals ($)</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-6 text-center">
+                            <div class="label-container"><p class="category-label label-out">Life expectancy at birth (years)</p></div>
+                            <div class="dropdown custom-drop">
+                                <button class="dropdown-toggle" type="button" data-toggle="dropdown">Life expectancy at birth (years)
+                                <span class="caret"></span></button>
+                                <ul class="dropdown-menu dropdown-bar">
+                                    <li><a onclick="updateData(healthData, dimExpense, this.text, false)">Life expectancy at birth (years)</a></li>
+                                    <li><a onclick="updateData(healthData, dimExpense, this.text)">Infant mortality per 1000 live births</a></li>
+                                    <li><a onclick="updateData(healthData, dimExpense, this.text)">Maternal mortality per 100,000 live births</a></li>
+                                    <li><a onclick="updateData(healthData, dimExpense, this.text)">Probability of dying prematurely from noncommunicative disease (%)</a></li>
+                                    <li><a onclick="updateData(healthData, dimExpense, this.text)">Drug-related deaths per million population (ages 15-64)</a></li>
+                                    <li><a onclick="updateData(healthData, dimExpense, this.text)">Suicides per 100000 population</a></li>
+                                    <li><a onclick="updateData(healthData, dimExpense, this.text)">Obesity as % of population ages 15 and over</a></li>
+                                    <li><a onclick="updateData(healthData, dimExpense, this.text)">Prevalence of diabetes in population ages 20 to 79 (%)</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id='sections'>
+                    <div class="story-text">
+                        <p style="margin-top: 80px">Typically, the more a developed country spends on health care, the longer its people live. The U.S., which spends the most on health care, bucks that trend. Compared to the 35 countries in the Organization for Economic Cooperation and Development, which promotes policies to improve social and economic well-being, the U.S. life expectancy of 78.8 years ranks 27th.</p>
+                    </div>
+                    <div class="story-text">
+                        <p>It has the fourth highest infant mortality rate in the OECD ...</p>
+                    </div>
+                    <div class="story-text">
+                        <p>... the sixth highest maternal mortality rate, and ...</p>
+                    </div>
+                    <div class="story-text">
+                        <p>... the ninth highest likelihood of dying at a younger age from a host of ailments, including cardiovascular disease and cancer.</p>
+                    </div>
+                    <div class="story-text">
+                        <p>The U.S. is the most obese country in the OECD, leads in drug-related deaths and ranks 33rd in prevalence of diabetes. Yet 88 percent of Americans say they are in good or very good health, according to OECD statistics. Only 35 percent of Japanese, who have the highest life expectancy in the OECD, regard themselves as healthy or very healthy.</p>
+                    </div>
+                    <div class="story-text">
+                        <p>Unlike other countries in the OECD, the U.S. mostly relies on voluntary health insurance to fund health-care costs. Public health insurance, such as Medicare and Medicaid, accounts for 27 percent of coverage. By contrast, the 10 countries with the highest life expectancy depend on voluntary insurance for an average of less than 6 percent of their costs, and government spending for nearly half.</p>
+                    </div>
+                    <div class="story-text">
+                        <p>One big reason U.S. health care costs are so high: pharmaceutical spending. The U.S. spends more per capita on prescription medicines and over-the-counter products than any other country in the OECD.</p>
+                    </div>
+                    <div class="story-text">
+                        <p>Interact with the data by clicking on the labels...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="steps"></div>
+    </div>
+    <div class="footer">
+        <div class="survey-button">Questionnaire <i class="fa fa-long-arrow-right" aria-hidden="true"></i></div>
+    </div>
+</body>
+
+<script src="js/graph-scroll.js"></script>
+<script src="js/custom.js"></script>
+<script type="text/javascript">
+    // Disabling the return to this page from the survey
+    $(document).ready(function() {
+        function disableBack() { window.history.forward() }
+
+        window.onload = disableBack();
+        window.onpageshow = function(evt) { if (evt.persisted) disableBack() }
+    });
+
+    // Configuring the removal of the instructions to use the down key
+    document.onkeydown = checkKey;
+
+    function checkKey(e) {
+        e = e || window.event;
+        if (e.keyCode == '38' || e.keyCode == '40') {
+            $('div.instructions').hide();
+        }
+    }
+</script>
+</html>

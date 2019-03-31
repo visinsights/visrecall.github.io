@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Americans Die Younger Despite Spending the Most on Health Care</title>
+
+    <!-- D3 and JQuery Javascript -->
+    <script  src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="js/timeme.js"></script>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+    <!-- Bootstrap Core CSS  -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link href="css/custom.css" rel="stylesheet">
+    <style>
+        .background path {
+            fill: none;
+            stroke: #ddd;
+        }
+
+        .foreground path {
+            fill: none;
+            stroke: #666;
+            stroke-width: 2px;
+        }
+
+        .label-container{
+            text-align: center;
+            height: 56px;
+        }
+
+        .category-label {
+            color: #333;
+            font-size: 12px;
+            font-weight: 400;
+            line-height: 14px;
+        }
+    </style>
+    <script>
+        window.onbeforeunload = function(){ window.scrollTo(0,0); }
+
+        $(function(){
+            $(".dropdown-menu.dropdown-bar").on('click', 'li a', function(){
+                replace = $(this).text();
+                $(this).parent().parent().prev().html(replace+ ' <span class="caret"></span>');
+            });
+        })
+    </script>
+</head>
+
+<body>
+    <div class="navbar">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8">
+                    <h1>Americans Die Younger Despite Spending the Most on Health Care</h1>
+                    <p class="margin-top-sm">Typically, the more a developed country spends on health care, the longer its people live. The U.S., which spends the most on health care, bucks that trend. Compared to the 35 countries in the Organization for Economic Cooperation and Development, which promotes policies to improve social and economic well-being, the U.S. has the highest per-capita spending on healthcare. Despite this, it lags behind on most scales such as life expectancy, infant and maternal mortality etc. Take a look at the graphs below to compare and contrast along various metrics, the healthcare costs and the healthcare conditions.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div id="graph">
+                <div class="col-md-6 margin-top-lg">
+                    <div class="graph graph-6">
+                        <img class="img-responsive" src="img/01.png">
+                    </div>
+                </div>
+                <div class="col-md-6 margin-top-lg">
+                    <div class="graph graph-6">
+                        <img class="img-responsive" src="img/02.png">
+                    </div>
+                </div>
+                <div class="col-md-6 margin-top-lg">
+                    <div class="graph graph-6">
+                        <img class="img-responsive" src="img/03.png">
+                    </div>
+                </div>
+                <div class="col-md-6 margin-top-lg">
+                    <div class="graph graph-6">
+                        <img class="img-responsive" src="img/04.png">
+                    </div>
+                </div>
+                <div class="col-md-6 margin-top-lg">
+                    <div class="graph graph-6">
+                        <img class="img-responsive" src="img/05.png">
+                    </div>
+                </div>
+                <div class="col-md-6 margin-top-lg">
+                    <div class="graph graph-6">
+                        <img class="img-responsive" src="img/06.png">
+                    </div>
+                </div>
+                <div class="col-md-6 margin-top-lg">
+                    <div class="graph graph-6">
+                        <img class="img-responsive" src="img/07.png">
+                    </div>
+                </div>
+                <div class="col-md-6 margin-top-lg">
+                    <div class="graph graph-6">
+                        <img class="img-responsive" src="img/08.png">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <div class="survey-button">Questionnaire <i class="fa fa-long-arrow-right" aria-hidden="true"></i></div>
+    </div>
+</body>
+<!-- <script src="js/custom.js"></script> -->
+<script type="text/javascript">
+    // Disabling the return to this page from the survey
+    $(document).ready(function() {
+        function disableBack() { window.history.forward() }
+
+        window.onload = disableBack();
+        window.onpageshow = function(evt) { if (evt.persisted) disableBack() }
+    });
+
+    // Configuring the removal of the instructions to use the down key
+    document.onkeydown = checkKey;
+
+    function checkKey(e) {
+        e = e || window.event;
+        if (e.keyCode == '38' || e.keyCode == '40') {
+            $('div.instructions').hide();
+        }
+    }
+</script>
+</html>

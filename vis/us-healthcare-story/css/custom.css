@@ -1,0 +1,188 @@
+@font-face {
+  font-family: futura-b;
+  src: url(../../futura/FuturaStd-Heavy.otf);
+}
+
+@font-face {
+  font-family: futura-bb;
+  src: url(../../futura/FuturaStd-Bold.otf);
+}
+
+h1{
+  font-family: 'Futura-bb', 'serif';
+  font-size: 24px;
+  line-height: 32px;
+  margin: 0px;
+}
+
+h4{
+  font-family: 'Futura-bb', 'serif';
+  font-size: 20px;
+  line-height: 24px;
+  margin: 0px;
+}
+
+p {
+  font-family: 'Avenir Next', sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 18px;
+}
+
+.navbar{
+  width: 100%;
+  padding: 24px 0px 8px 0px;
+  top: 0px;
+  background-color: #fff;
+  margin: 0px;
+  position: fixed;
+  box-shadow: 0px 2px 5px #ddd;
+  z-index: 999;
+}
+
+.story-text{
+  padding: 16px;
+}
+
+span.highlight{
+  background-color: yellow;
+}
+
+.inline-text {
+  display: inline-block;
+}
+
+.margin-top-sm {
+  margin-top: 24px;
+}
+
+.margin-top-md {
+  margin-top: 48px;
+}
+
+.margin-lg {
+  margin: 80px 0px;
+}
+
+.margin-btm-md {
+  margin-bottom: 48px;
+}
+
+.axis-label {
+  fill: #4a4a4a !important;
+  font-family: 'Avenir Next', sans-serif;
+  font-weight: 500;
+  font-size: 24px;
+}
+
+.tickFormat {
+  fill: #4a4a4a !important;
+  font-family: 'Avenir Next', sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.axis line{
+    fill: none;
+    stroke: #333;
+    stroke-width: 1px;
+}
+
+text {
+  font-family: 'Avenir Next', sans-serif;
+  fill: #4a4a4a;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+text.data-label {
+  font-family: 'Avenir Next', sans-serif;
+  fill: #4a4a4a;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+text.annotation-note-label {
+  font-family: 'Avenir Next', sans-serif;
+  fill: #4a4a4a;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+button {
+  font-family: 'Avenir Next', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 0px;
+  margin: 16px auto 0px auto;
+  width: 300px;
+  text-align: left;
+  background-color: #eee;
+  border: 1px solid #eee;
+  border-radius: 2px;
+  text-align: center;
+}
+
+button:hover,
+button:active,
+button:focus {
+  outline: 0 !important;
+}
+
+button.selected {
+  background-color: #333;
+  color: #fff;
+}
+
+.footer {
+  background-color: #fafafa;
+  margin-top: 80px;
+  padding: 48px 0px;
+}
+
+.survey-button {
+  width: 160px;
+  height: 32px;
+  line-height: 32px;
+  font-family: 'Avenir Next', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  background-color: #2a2a2a;
+  border-radius: 2px;
+  text-align: center;
+  color: #fff;
+  margin: 32px auto;
+  cursor:pointer;
+}
+
+.step-circle {
+  height: 12px;
+  width: 12px;
+  border-radius: 12px;
+  border: 2px solid #666;
+  background-color: none;
+  margin: 12px 2px;
+}
+
+.section-active {
+  background-color: #333;
+  border: 2px solid #333;
+  height: 16px;
+  width: 16px;
+  margin: 10px 0px;
+}
+
+.instructions {
+  width: 144px;
+  position: fixed;
+  bottom: 10%;
+  left: 15%;
+  color: #aaa;
+}
+
+.instructions > p{
+  font-size: 12px;
+  line-height: 14px;
+}
+
+

@@ -1,0 +1,209 @@
+@font-face {
+  font-family: futura-b;
+  src: url(../../futura/FuturaStd-Heavy.otf);
+}
+
+@font-face {
+  font-family: futura-bb;
+  src: url(../../futura/FuturaStd-Bold.otf);
+}
+
+h1{
+  font-family: 'Futura-bb', 'serif';
+  font-size: 32px;
+  line-height: 40px;
+}
+
+h6{
+  font-family: 'Futura-b', 'serif';
+  font-size: 18px;
+  line-height: 21px;
+}
+
+p {
+  font-family: 'Avenir Next', serif;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 18px;
+}
+
+.navbar{
+  width: 100%;
+  padding: 8px 0px 0px 0px;
+  position: fixed;
+  top: 0px;
+  background-color: #202020;
+  z-index: 999;
+  margin: 0px;
+  color: #fff;
+  border-radius: 0px !important;
+}
+
+.filler {
+  height: 288px;
+}
+
+span.highlight{
+  background-color: #FFB10A;
+}
+
+span.highlight-alt{
+  background-color: #F5CB5C;
+}
+
+.inline-text {
+  display: inline-block;
+}
+
+.margin-top-sm {
+  margin-top: 24px;
+}
+
+.margin-top-md {
+  margin-top: 48px;
+}
+
+.margin-btm-md {
+  margin-bottom: 48px;
+}
+
+.margin-lg {
+  margin: 80px 0px;
+}
+
+.axis-label {
+  fill: #4a4a4a !important;
+  font-family: 'Avenir Next', sans-serif;
+  font-weight: 500;
+  font-size: 24px;
+}
+
+.tickFormat {
+  fill: #4a4a4a !important;
+  font-family: 'Avenir Next', sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.axis path,
+.axis line{
+    fill: none;
+    stroke: #aaa;
+    stroke-width: 1px;
+    shape-rendering: crispEdges;
+}
+
+text {
+  font-family: 'Avenir Next', sans-serif;
+  font-size: 14px;
+}
+
+.hover-circle {
+  fill: none;
+  stroke: #ED7301;
+  stroke-width: 2px;
+}
+
+.hover-label {
+  font-family: 'Avenir Next', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  fill: #ED7301;
+}
+
+.domain{
+  opacity: 0;
+}
+
+button {
+  font-family: 'Avenir Next', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  margin: 16px 0px;
+  min-width: 144px;
+  line-height: 36px;
+  text-align: left;
+  border: 1px solid #333;
+  border-radius: 4px;
+  text-align: center;
+}
+
+button:hover,
+button:active,
+button:focus {
+  outline: 0 !important;
+}
+
+button.selected {
+  background-color: #333;
+  color: #fff;
+}
+
+#filters {
+  margin-top: 120px;
+}
+
+div.page-footer{
+  padding: 32px 0px;
+  background-color: #f6f6f6;
+}
+
+.instructional-text{
+  font-family: 'Avenir Next', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #666;
+}
+
+.footer {
+  background-color: #fafafa;
+  margin-top: 80px;
+  padding: 48px 0px;
+}
+
+.survey-button {
+  width: 160px;
+  height: 32px;
+  line-height: 32px;
+  font-family: 'Avenir Next', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  background-color: #2a2a2a;
+  border-radius: 2px;
+  text-align: center;
+  color: #fff;
+  margin: 32px auto;
+  cursor:pointer;
+}
+
+.step-circle {
+  height: 12px;
+  width: 12px;
+  border-radius: 12px;
+  border: 2px solid #666;
+  background-color: none;
+  margin: 12px 2px;
+}
+
+.section-active {
+  background-color: #333;
+  border: 2px solid #333;
+  height: 16px;
+  width: 16px;
+  margin: 10px 0px;
+}
+
+.instructions {
+  width: 144px;
+  position: fixed;
+  bottom: 10%;
+  left: 50%;
+  margin-left: -72px;
+  color: #aaa;
+}
+
+.instructions > p{
+  font-size: 12px;
+  line-height: 14px;
+}
+

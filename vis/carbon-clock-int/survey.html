@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>Atmospheric CO2 levels</title>
+
+        <!-- D3 and JQuery Javascript -->
+        <script  src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+        <script src="https://d3js.org/d3.v4.min.js"></script>
+
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+        <!-- Bootstrap Core CSS  -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+        <!-- Custom CSS -->
+        <style>
+            body, html {width: 100%; height: 100%; margin: 0; padding: 0}
+
+            .survey{ width: 100%; height: 100%; }
+        </style>
+    </head>
+    <body>
+    </body>
+</html>
+<script type='text/javascript'>
+
+    window.onload = function() {
+        console.log("ready!");
+        var iframe = document.createElement('iframe');
+        iframe.src = "https://survey.qualtrics.com/jfe/form/SV_5pWR2lsqmKCAIRv?vis=carbon-clock";
+        $('body').append(iframe);
+        $('iframe').attr('class', 'survey');
+    };
+</script>

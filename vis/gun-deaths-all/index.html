@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Gun Deaths in America</title>
+
+    <!-- D3 and JQuery Javascript -->
+    <script  src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="js/timeme.js"></script>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+    <!-- Bootstrap Core CSS  -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link href="css/custom.css" rel="stylesheet">
+    <style>
+        #container{
+            position: relative;
+        }
+
+        #sections{
+            width: 320px;
+            margin-top: 80px;
+            padding-bottom: 360px;
+        }
+
+        #sections > div{
+            background: white;
+            opacity: .2;
+            margin-bottom: 400px;
+        }
+        #sections > div:last-child{
+            margin-bottom: 30px;
+        }
+        #sections > div.graph-scroll-active{
+            opacity: 1;
+        }
+
+        #graph{
+            margin-left: 40px;
+            width: 800px;
+            position: -webkit-sticky;
+            position: sticky;
+            top: 96px;
+            float: right;
+        }
+
+        .btn-default{
+            min-width: 144px !important;
+        }
+
+        .steps{
+            top: 50%;
+            transform:translateY(-50%);
+            position: fixed;
+            right: 50px;
+        }
+    </style>
+    <script>
+        window.onbeforeunload = function(){ window.scrollTo(0,0); }
+        
+        var gender = "",
+            age = "",
+            race = "",
+            intent = "";
+
+        function set_params(gender_curr, age_curr, race_curr, intent_curr){
+            clickCount += 1;
+            if (gender_curr != ""){
+                if (gender_curr[0] != "." && gender_curr.length > 1){
+                    gender = "."+gender_curr;
+                }
+            } else {
+                gender = ""
+            }
+            if (age_curr != ""){
+                if (age_curr[0] != "." && age_curr.length > 1){
+                    age = "."+age_curr;
+                }
+            } else {
+                age = ""
+            }
+            if (race_curr != ""){
+                if (race_curr[0] != "." && race_curr.length > 1){
+                    race = "."+race_curr;
+                }
+            } else {
+                race = ""
+            }
+            if (intent_curr == ""){
+                intent = ""
+            } else {
+                if (intent_curr[0] != "." && intent_curr.length > 1){
+                    intent = "."+intent_curr;
+                }                    
+            }
+            loadData(gender, age, race, intent);
+        }
+
+        $(function(){
+            $(".dropdown-menu.dropdown-bar").on('click', 'li a', function(){
+                replace = $(this).text();
+                $(this).parent().parent().prev().html(replace+ ' <span class="caret"></span>');
+            });
+        })
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="instructions text-center">
+            <i class="material-icons">arrow_drop_down_circle</i>
+            <p>Use up / down arrow keys to scroll up / down</p>
+        </div>
+        <h1>Gun Deaths in America</h1>
+        <div id='container'>
+            <div id="graph">
+                <p class="death-desc" style="margin-left: 10px"><br></p>
+            </div>
+            <div id='sections'>
+                <div class="story-text" style="margin-top: 108px;">
+                    <p>How many people in the U.S. are a victim of gun-related violence annually? Let's take a look...</p>
+                </div>
+                <div class="story-text">
+                    <p>More than <b>33,000</b> people were fatally shot in the U.S. in 2014.</p>
+                </div>
+                <div class="story-text">
+                    <p>Nearly two-thirds of gun deaths are <b>suicides</b>.</p>
+                </div>
+                <div class="story-text">
+                    <p>More than 85 percent of suicide victims are <b>male</b> ...</p>
+                </div>
+                <div class="story-text">
+                    <p>... and around three-fourth of them are men age <b>35 or older</b>.</p>
+                </div>
+                <div class="story-text">
+                    <p>Another third of all gun deaths — about 11,000 in total each year — are <b>homicides</b>.</p>
+                </div>
+                <div class="story-text">
+                    <p>More than half of homicide victims are <b>young men</b> ...</p>
+                </div>
+                <div class="story-text">
+                    <p>... two-thirds of whom are <b>black</b>.</p>
+                </div>
+                <div class="story-text">
+                    <p>Women are far less likely to be gun homicide victims — about 1,700 of them are killed each year, many in <b>domestic violence</b> incidents.</p>
+                </div>
+                <div class="story-text">
+                    <p>The remaining gun deaths are accidents or are classified as undetermined.</p>
+                </div>
+                <div class="story-text">
+                    <p>However, <b>terrorism</b> and <b>mass shootings</b>, <b>police officers killed</b> in the line of duty, and <b>police shootings</b> of civilians receive the maximum news coverage.</p>
+                </div>
+                <div class="story-text">
+                    <p>The common element in all these deaths is a gun. But the causes are very different, and that means the solutions must be, too.</p>
+                </div>
+                <div class="story-text" style="margin-bottom: 200px;">
+                    <p>Explore the data...</p>
+                    <div class="row" style="margin-bottom: 16px;">
+                        <div class="col-sm-6">
+                            <div class="dropdown custom-drop">
+                                <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">All causes
+                                <span class="caret"></span></button>
+                                <ul class="dropdown-menu dropdown-bar">
+                                    <li><a id="" class="custom-btn" onclick="set_params(gender, age, race, this.id)">All causes</a></li>
+                                    <li><a id="Suicide" class="custom-btn" onclick="set_params(gender, age, race, this.id)">Suicides</a></li>
+                                    <li><a id="Homicide" class="custom-btn" onclick="set_params(gender, age, race, this.id)">Homicide</a></li>
+                                    <li><a id="Accidental" class="custom-btn" onclick="set_params(gender, age, race, this.id)">Accident</a></li>
+                                    <li><a id="Undetermined" class="custom-btn" onclick="set_params(gender, age, race, this.id)">Undetermined</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="dropdown custom-drop">
+                                <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">All genders
+                                <span class="caret"></span></button>
+                                <ul class="dropdown-menu dropdown-bar">
+                                    <li><a id="" class="custom-btn" onclick="set_params(this.id, age, race, intent)">All genders</a></li>
+                                    <li><a id="Male" class="custom-btn" onclick="set_params(this.id, age, race, intent)">Male</a></li>
+                                    <li><a id="Female" class="custom-btn" onclick="set_params(this.id, age, race, intent)">Female</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="dropdown custom-drop">
+                                <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">All ages
+                                <span class="caret"></span></button>
+                                <ul class="dropdown-menu dropdown-bar">
+                                    <li><a id="" class="custom-btn" onclick="set_params(gender, this.id, race, intent)">All ages</a></li>
+                                    <li><a id="_Under15" class="custom-btn" onclick="set_params(gender, this.id, race, intent)">Under 15</a></li>
+                                    <li><a id="_15to34" class="custom-btn" onclick="set_params(gender, this.id, race, intent)">15 to 34</a></li>
+                                    <li><a id="_35to64" class="custom-btn" onclick="set_params(gender, this.id, race, intent)">35 to 64</a></li>
+                                    <li><a id="_65older" class="custom-btn" onclick="set_params(gender, this.id, race, intent)">65 and older</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="dropdown custom-drop">
+                                <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">All races
+                                <span class="caret"></span></button>
+                                <ul class="dropdown-menu dropdown-bar">
+                                    <li><a id="" class="custom-btn" onclick="set_params(gender, age, this.id, intent)">All races</a></li>
+                                    <li><a id="White" class="custom-btn" onclick="set_params(gender, age, this.id, intent)">White</a></li>
+                                    <li><a id="Black" class="custom-btn" onclick="set_params(gender, age, this.id, intent)">Black</a></li>
+                                    <li><a id="Hispanic" class="custom-btn" onclick="set_params(gender, age, this.id, intent)">Hispanic</a></li>
+                                    <li><a id="Asian" class="custom-btn" onclick="set_params(gender, age, this.id, intent)">Asian</a></li>
+                                    <li><a id="Other" class="custom-btn" onclick="set_params(gender, age, this.id, intent)">Native American</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="steps"></div>
+    </div>
+    <div class="footer">
+        <div class="survey-button">Questionnaire <i class="fa fa-long-arrow-right" aria-hidden="true"></i></div>
+    </div>
+</body>
+
+<script src="js/graph-scroll.js"></script>
+<script src="js/custom.js"></script>
+<script>
+    // Disabling the return to this page from the survey
+    $(document).ready(function() {
+        function disableBack() { window.history.forward() }
+
+        window.onload = disableBack();
+        window.onpageshow = function(evt) { if (evt.persisted) disableBack() }
+    });
+    
+    document.onkeydown = checkKey;
+
+    function checkKey(e) {
+        e = e || window.event;
+        if (e.keyCode == '38' || e.keyCode == '40') {
+            $('div.instructions').hide();
+        }
+    }
+</script>
+</html>

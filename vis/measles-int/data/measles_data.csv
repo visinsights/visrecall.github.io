@@ -1,0 +1,32 @@
+state,county,# of kindergarten students,vaccination rate
+Maryland,Baltimore County,9336,1
+Florida,Gadsden,12416,0.99
+Massachusetts,Middlesex,17998,0.98
+Arizona,Pima,11704,0.97
+California,Riverside,34377,0.96
+Rhode Island,Providence,7113,0.95
+Pennsylvania,Philadelphia,17237,0.94
+Minnesota,Hennepin,14915,0.93
+California,Orange County,42076,0.92
+New Jersey,Essex,11384,0.91
+California,Los Angeles,130146,0.9
+California,Sacramento,19527,0.89
+Pennsylvania,Butler,1987,0.88
+Virginia,Fairfax,14369,0.87
+California,Santa Cruz,3680,0.86
+Wisconsin,Winnebago,2192,0.85
+Nevada,Clark,28555,0.84
+Ohio,Cuyahoga,13644,0.83
+Michigan,Detroit,0,0.82
+Washington,King,24861,0.81
+Ohio,Hamilton,9844,0.8
+California,Humboldt,1613,0.79
+Wisconsin,Milwaukee,16680,0.78
+Alabama,Montgomery,3354,0.77
+Washington,Thurston,3277,0.76
+Wisconsin,Monroe,728,0.75
+California,Nevada,854,0.74
+Alabama,Jefferson,9910,0.73
+Indiana,Ohio,0,0.72
+Illinois,Wabash,0,0.71
+Alabama,Madison,3981,0.7

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Gun Deaths in America</title>
+
+    <!-- D3 and JQuery Javascript -->
+    <script  src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-annotation/2.1.0/d3-annotation.min.js"></script>
+    <script src="js/timeme.js"></script>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+    <!-- Bootstrap Core CSS  -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- Fonts  -->
+    <link href="https://fonts.googleapis.com/css?family=Gentium+Book+Basic:400,700" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="css/custom.css" rel="stylesheet">
+    <style>
+        .graph{
+            width: 500px;
+            position: absolute;
+            top: 0px;
+        }
+
+        .btn-default{
+            min-width: 144px !important;
+        }
+    </style>
+    <script>
+        window.onbeforeunload = function(){ window.scrollTo(0,0); }
+        
+        var gender = "",
+            age = "",
+            race = "",
+            intent = "";
+
+        function set_params(gender_curr, age_curr, race_curr, intent_curr){
+            if (gender_curr != ""){
+                if (gender_curr[0] != "." && gender_curr.length > 1){
+                    gender = "."+gender_curr;
+                }
+            } else {
+                gender = ""
+            }
+            if (age_curr != ""){
+                if (age_curr[0] != "." && age_curr.length > 1){
+                    age = "."+age_curr;
+                }
+            } else {
+                age = ""
+            }
+            if (race_curr != ""){
+                if (race_curr[0] != "." && race_curr.length > 1){
+                    race = "."+race_curr;
+                }
+            } else {
+                race = ""
+            }
+            if (intent_curr == ""){
+                intent = ""
+            } else {
+                if (intent_curr[0] != "." && intent_curr.length > 1){
+                    intent = "."+intent_curr;
+                }                    
+            }
+            loadData(gender, age, race, intent)
+        }
+
+        $(function(){
+            $(".dropdown-menu.dropdown-bar").on('click', 'li a', function(){
+                replace = $(this).text();
+                $(this).parent().parent().prev().html(replace+ ' <span class="caret"></span>');
+            });
+        })
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <h1 style="margin-left: 10px; margin-top: 80px;">Gun Deaths in America</h1>
+                <div id="graph">
+                    <div class ="graph-1" style="margin-top: 40px;">
+                        <div class="row">
+                            <div class="col-sm-8">
+                                <p style="margin-left: 10px">We present here a series of visualizations which allows you to explore the more than 33,000 annual gun deaths in America. We break these deaths down into the different causes and the demographics affected.<br><br>Each dot represents <b>one gun death in the year 2014.</b></p>
+                            </div>
+                        </div>
+                        <p class="death-desc" style="margin-left: 10px; margin-top: 32px">Demographics: Gun deaths by cause</p>
+                    </div>
+                    <div class ="graph-2" style="margin-top: 64px;">
+                        <p class="death-desc" style="margin-left: 10px">Demographics: Gender of the victims for gun deaths by suicides and homicides</p>
+                    </div>
+                    <div class ="graph-3" style="margin-top: 120px;">
+                        <p class="death-desc" style="margin-left: 10px">Demographics: Age of the victims for gun deaths by suicides and homicides</p>
+                    </div>
+                    <div class ="graph-4" style="margin-top: 120px;">
+                        <p class="death-desc" style="margin-left: 10px">Demographics: Race of the victims for gun deaths by suicides and homicides</p>
+                        <p class="caption" style="margin-left: 10px">The unlabelled group combines the data for Asians, Native Americans and Native Alaskans.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <div class="survey-button">Questionnaire <i class="fa fa-long-arrow-right" aria-hidden="true"></i></div>
+    </div>
+</body>
+<script src="custom.js"></script>
+<script>
+    // Disabling the return to this page from the survey
+    $(document).ready(function() {
+        function disableBack() { window.history.forward() }
+
+        window.onload = disableBack();
+        window.onpageshow = function(evt) { if (evt.persisted) disableBack() }
+    });
+    
+    document.onkeydown = checkKey;
+
+    function checkKey(e) {
+        e = e || window.event;
+        if (e.keyCode == '38' || e.keyCode == '40') {
+            $('div.instructions').hide();
+        }
+    }
+</script>
+</html>

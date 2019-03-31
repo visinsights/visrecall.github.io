@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Americans Die Younger Despite Spending the Most on Health Care</title>
+
+    <!-- D3 and JQuery Javascript -->
+    <script  src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="js/timeme.js"></script>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+    <!-- Bootstrap Core CSS  -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link href="css/custom.css" rel="stylesheet">
+    <style>
+        .background path {
+            fill: none;
+            stroke: #ddd;
+        }
+
+        .foreground path {
+            fill: none;
+            stroke: #666;
+            stroke-width: 2px;
+        }
+
+        button {
+            width: 300px !important;
+            white-space: normal;
+        }
+
+        .dropdown {
+            height: 54px;
+        }
+    </style>
+    <script>
+        window.onbeforeunload = function(){ window.scrollTo(0,0); }
+
+        $(function(){
+            $(".dropdown-menu.dropdown-bar").on('click', 'li a', function(){
+                replace = $(this).text();
+                $(this).parent().parent().prev().html(replace+ ' <span class="caret"></span>');
+            });
+        })
+    </script>
+</head>
+
+<body>
+    <div class="navbar">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    <h1>Americans Die Younger Despite Spending the Most on Health Care</h1>
+                    <p>Typically, the more a developed country spends on health care, the longer its people live. The U.S., which spends the most on health care, bucks that trend. Compared to the 35 countries in the Organization for Economic Cooperation and Development, which promotes policies to improve social and economic well-being, the U.S. has the highest per-capita spending on healthcare. Interact with the graph below to compare and contrast along various metrics, the quality of healthcare along scales such as life expectancy, infant and maternal mortality etc.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container" style="margin-top: 40px;">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="text-center"><h4>Cost vs Care</h4></div>
+                <div class="row">
+                    <div class="col-md-6 text-center">
+                        <div class="dropdown custom-drop">
+                            <button class="dropdown-toggle" type="button" data-toggle="dropdown">Per-capita spending on health care ($)
+                            <span class="caret"></span></button>
+                            <ul class="dropdown-menu dropdown-bar">
+                                <li><a onclick="updateData(healthData, this.text, dimOutcome)">Per-capita spending on health care ($)</a></li>
+                                <li><a onclick="updateData(healthData, this.text, dimOutcome)">Health care spending as a share of GDP (%)</a></li>
+                                <li><a onclick="updateData(healthData, this.text, dimOutcome)">Government spending on health care (%)</a></li>
+                                <li><a onclick="updateData(healthData, this.text, dimOutcome)">Compulsory/contributory insurance & medical savings accounts (%)</a></li>
+                                <li><a onclick="updateData(healthData, this.text, dimOutcome)">Out-of-pocket costs (%)</a></li>
+                                <li><a onclick="updateData(healthData, this.text, dimOutcome)">Voluntary health insurance (%)</a></li>
+                                <li><a onclick="updateData(healthData, this.text, dimOutcome)">Per-capita spending on pharmaceuticals ($)</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-6 text-center">
+                        <div class="dropdown custom-drop">
+                            <button class="dropdown-toggle" type="button" data-toggle="dropdown">Life expectancy at birth (years)
+                            <span class="caret"></span></button>
+                            <ul class="dropdown-menu dropdown-bar">
+                                <li><a onclick="updateData(healthData, dimExpense, this.text)">Life expectancy at birth (years)</a></li>
+                                <li><a onclick="updateData(healthData, dimExpense, this.text)">Infant mortality per 1000 live births</a></li>
+                                <li><a onclick="updateData(healthData, dimExpense, this.text)">Maternal mortality per 100,000 live births</a></li>
+                                <li><a onclick="updateData(healthData, dimExpense, this.text)">Probability of dying prematurely from noncommunicative disease (%)</a></li>
+                                <li><a onclick="updateData(healthData, dimExpense, this.text)">Drug-related deaths per million population (ages 15-64)</a></li>
+                                <li><a onclick="updateData(healthData, dimExpense, this.text)">Suicides per 100000 population</a></li>
+                                <li><a onclick="updateData(healthData, dimExpense, this.text)">Obesity as % of population ages 15 and over</a></li>
+                                <li><a onclick="updateData(healthData, dimExpense, this.text)">Prevalence of diabetes in population ages 20 to 79 (%)</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div id='container'>
+                    <div id="graph"></div>
+                </div>
+            </div>
+            <div class="col-md-2">
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+    <div class="survey-button">Questionnaire <i class="fa fa-long-arrow-right" aria-hidden="true"></i></div>
+</div>
+</body>
+<script src="js/custom.js"></script>
+<script type="text/javascript">
+    // Disabling the return to this page from the survey
+    $(document).ready(function() {
+        function disableBack() { window.history.forward() }
+
+        window.onload = disableBack();
+        window.onpageshow = function(evt) { if (evt.persisted) disableBack() }
+    });
+
+    // Configuring the removal of the instructions to use the down key
+    document.onkeydown = checkKey;
+
+    function checkKey(e) {
+        e = e || window.event;
+        if (e.keyCode == '38' || e.keyCode == '40') {
+            $('div.instructions').hide();
+        }
+    }
+</script>
+</html>
